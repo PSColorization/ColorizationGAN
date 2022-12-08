@@ -3,3 +3,5 @@
 **/*.zip
 **/*.png
 training_checkpoints/*
+.idea/
+
