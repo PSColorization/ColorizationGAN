@@ -1,0 +1,7 @@
+**/*.npz
+**/*.jpg
+**/*.zip
+**/*.png
+training_checkpoints/*
+.idea/
+
