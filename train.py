@@ -9,7 +9,7 @@ print(device_lib.list_local_devices())
 
 BUFFER_SIZE = 60000
 BATCH_SIZE = 16
-EPOCHS = 100
+EPOCHS = 500
 input_dim = (256, 256, 1)
 num_examples_to_generate = 16
 
@@ -19,53 +19,51 @@ generator_optimizer = None
 discriminator_optimizer = None
 checkpoint = None
 checkpoint_prefix = None
-cross_entropy = BinaryCrossentropy(from_logits=True)
-
+cross_entropy = BinaryCrossentropy()
+mse = tf.keras.losses.MeanSquaredError()
 
 def discriminator_loss(real_output, fake_output):
-    real_loss = cross_entropy(tf.ones_like(real_output), real_output)
-    fake_loss = cross_entropy(tf.zeros_like(fake_output), fake_output)
-    total_loss = real_loss + fake_loss
+    real_loss = cross_entropy(tf.ones_like(real_output) - tf.random.uniform(shape=real_output.shape, maxval=0.1), real_output)
+    fake_loss = cross_entropy(tf.zeros_like(fake_output) + tf.random.uniform(shape=fake_output.shape, maxval=0.1), fake_output)
+    total_loss = (real_loss + fake_loss) / 2
     return total_loss
 
 
-def generator_loss(fake_output):
-    return cross_entropy(tf.ones_like(fake_output), fake_output)
-
+def generator_loss(fake_output, real_y):
+    real_y = tf.cast( real_y , 'float32' )
+    return mse(fake_output, real_y)
 
 # Notice the use of `tf.function`
 # This annotation causes the function to be "compiled".
-# @tf.function
+@tf.function
 def train_step(input_batch_x, output_batch_y):
     (gray_pic, hue), rgb_pic = input_batch_x, output_batch_y
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-        generated_images = generator([gray_pic, hue], training=True)
+        generated_images = generator([gray_pic], training=True)
         real_output = discriminator(rgb_pic, training=True)
         fake_output = discriminator(generated_images, training=True)
 
-        gen_loss = generator_loss(fake_output)
+        gen_loss = generator_loss(generated_images, rgb_pic)
 
         disc_loss = discriminator_loss(real_output, fake_output)
-
-
 
     gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
     gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
 
     generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
-    return (gen_loss, disc_loss)
+
 
 def train(dataset):
     for epoch in range(EPOCHS):
         start = time.time()
 
         for (gray_batch_x, hue_batch_x), output_batch_y in dataset:
-            (gen_loss, disc_loss) = train_step((gray_batch_x, hue_batch_x), output_batch_y)
-            print((gen_loss, disc_loss))
+            train_step((gray_batch_x, hue_batch_x), output_batch_y)
+
 
         # Save the model every 10 epochs
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 100 == 0:
             checkpoint.save(file_prefix=checkpoint_prefix)
             generator.save("generatorTrained.h5")
 
@@ -92,6 +90,9 @@ def run(GANmodel, trainData):
                                      discriminator=discriminator)
 
 
+    # gray_pic = tf.data.Dataset.from_tensor_slices(trainData[0][0]).batch(BATCH_SIZE)
+    # hue = tf.data.Dataset.from_tensor_slices(trainData[0][1]).batch(BATCH_SIZE)
+    # rgb_pic = tf.data.Dataset.from_tensor_slices(trainData[1]).batch(BATCH_SIZE)
     trainData = tf.data.Dataset.from_tensor_slices(trainData).batch(BATCH_SIZE)
-
+    # trainData = (gray_pic, hue), rgb_pic
     train(trainData)
