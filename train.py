@@ -20,7 +20,7 @@ discriminator_optimizer = None
 checkpoint = None
 checkpoint_prefix = None
 cross_entropy = BinaryCrossentropy()
-mse = tf.keras.losses.MeanSquaredError()
+mae = tf.keras.losses.MeanAbsoluteError()
 
 def discriminator_loss(real_output, fake_output):
     real_loss = cross_entropy(tf.ones_like(real_output) - tf.random.uniform(shape=real_output.shape, maxval=0.1), real_output)
@@ -31,7 +31,7 @@ def discriminator_loss(real_output, fake_output):
 
 def generator_loss(fake_output, real_y):
     real_y = tf.cast( real_y , 'float32' )
-    return mse(fake_output, real_y)
+    return mae(fake_output, real_y)
 
 # Notice the use of `tf.function`
 # This annotation causes the function to be "compiled".
