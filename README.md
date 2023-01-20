@@ -1,2 +1,2 @@
 # ColorizationGAN
-This repository has full GAN model codes. Train, prediction, test...
+
