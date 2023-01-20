@@ -23,17 +23,17 @@ class GAN:
         model = layers.Conv2D(filters=8, kernel_size=self.kernel_size, padding='same', activation='relu')(
             input_gray_pic)
 
-        model = layers.MaxPooling2D(pool_size=(2, 2))(model)
+        # model = layers.MaxPooling2D(pool_size=(2, 2))(model)
 
         model = layers.Conv2D(filters=16, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
 
-        model = layers.MaxPooling2D(pool_size=(2, 2))(model)
+        # model = layers.MaxPooling2D(pool_size=(2, 2))(model)
 
         model = layers.Conv2D(filters=24, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
 
         model = layers.Conv2D(filters=32, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
 
-        model = layers.MaxPooling2D(pool_size=(2, 2))(model)
+        # model = layers.MaxPooling2D(pool_size=(2, 2))(model)
 
         model = layers.Conv2D(filters=48, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
 
@@ -49,16 +49,13 @@ class GAN:
         model = layers.Conv2D(filters=16, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
         # ------------------------------------------------------------------------------------------------------
         model = layers.Conv2D(filters=128, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
-        model = layers.Conv2DTranspose(filters=8, kernel_size=self.kernel_size, strides=2, padding='same',
-                                       activation='relu')(model)
+        # model = layers.Conv2DTranspose(filters=8, kernel_size=self.kernel_size, strides=2, padding='same', activation='relu')(model)
 
         model = layers.Conv2D(filters=128, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
-        model = layers.Conv2DTranspose(filters=16, kernel_size=self.kernel_size, strides=2, padding='same',
-                                       activation='relu')(model)
+        # model = layers.Conv2DTranspose(filters=16, kernel_size=self.kernel_size, strides=2, padding='same', activation='relu')(model)
 
         model = layers.Conv2D(filters=64, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
-        model = layers.Conv2DTranspose(filters=32, kernel_size=self.kernel_size, strides=2, padding='same',
-                                       activation='relu')(model)
+        # model = layers.Conv2DTranspose(filters=32, kernel_size=self.kernel_size, strides=2, padding='same', activation='relu')(model)
 
         model = layers.Conv2D(filters=64, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
         model = layers.Conv2D(filters=32, kernel_size=self.kernel_size, padding='same', activation='relu')(model)
@@ -84,12 +81,12 @@ class GAN:
         model.add(layers.Dropout(0.3))
 
         model.add(layers.Conv2D(128, self.kernel_size, padding='same'))
-        model.add(layers.Conv2D(64, self.kernel_size, padding='same'))
+        model.add(layers.Conv2D(32, self.kernel_size, padding='same'))
         model.add(layers.LeakyReLU())
         model.add(layers.Dropout(0.3))
 
         model.add(layers.Flatten())
-        model.add(layers.Dense(64))
+        model.add(layers.Dense(32))
         model.add(layers.Dense(16))
         model.add(layers.Dense(1))
 
