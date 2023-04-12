@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     if mission == 'train':
         # Preparing train, validation np.array's
-        train_path = "./TEST/onlynpz" #"./train/"
+        train_path = "./TEST/sky_onlynpz"
         val_path = "./val/"
 
         # (X_train_gray, X_train_hue), y_train = dataProcessing.get_X_y(train_path)

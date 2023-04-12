@@ -10,7 +10,7 @@ print(device_lib.list_local_devices())
 BUFFER_SIZE = 60000
 BATCH_SIZE = 16
 EPOCHS = 500
-input_dim = (256, 256, 1)
+# input_dim = (256, 256, 1)
 num_examples_to_generate = 16
 
 generator = None
@@ -39,7 +39,7 @@ def generator_loss(fake_output, real_y):
 def train_step(input_batch_x, output_batch_y):
     (gray_pic, hue), rgb_pic = input_batch_x, output_batch_y
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-        generated_images = generator([gray_pic], training=True)
+        generated_images = generator([gray_pic, hue], training=True)
         real_output = discriminator(rgb_pic, training=True)
         fake_output = discriminator(generated_images, training=True)
 

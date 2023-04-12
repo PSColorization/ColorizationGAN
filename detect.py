@@ -41,13 +41,13 @@ def detect(modelName, photoPath, npzName):
     plt.show()
 
 
-modelName = "models/soccer_field.h5"
-photoPath = "/content/drive/MyDrive/ColorizationGAN/TEST/soccer_field_onlynpz"
+modelName = "/Users/enesguler/Downloads/soccer_field.h5"
+photoPath = "/Users/enesguler/PycharmProjects/GraduationProject/ColorizationGAN/TEST/soccer_field_onlynpz"
 npzName = "00000100"
 
 for i in range(1, 300):
     print(i)
-    try:
-        detect(modelName, photoPath, str(i).zfill(8))
-    except:
-        pass
+    # try:
+    detect(modelName, photoPath, str(i).zfill(8))
+    # except:
+    #     pass
