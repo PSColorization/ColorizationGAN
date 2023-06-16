@@ -63,7 +63,7 @@ def exact_color(input_image, resize, tolerance, zoom):
 
 
 sys.path.append(os.getcwd())
-os.chdir("sky/")
+os.chdir("army_base/")
 
 image_paths = [dir for dir in os.listdir(".")]
 
