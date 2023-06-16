@@ -18,7 +18,7 @@ class GAN:
         self.gray_picture_shape = (256, 256, 1)
 
     def createGenerator(self):
-        # return autoencoder.Autoencoder()
+        
 
         input_gray_pic = layers.Input(shape=(256, 256, 1))
         input_palette = layers.Input(shape=(256, 256, 10))
